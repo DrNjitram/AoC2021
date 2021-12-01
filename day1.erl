@@ -2,7 +2,6 @@
 
 -export([part1/1, part2/1]).
 
-
 part1(Lines) ->
     check_heights(["999"] ++ [list_to_integer(Line) || Line <- Lines], 0).
 

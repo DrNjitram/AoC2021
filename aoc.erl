@@ -2,7 +2,7 @@
 
 -export([run/1, time/1, run/2, time/2, run/3, time/3, test/1, download_input/1]).
 
-days() -> lists:seq(1, 14) ++ [17, 23, 24].
+days() -> lists:seq(1, 25).
 all() -> 
     [ {D, P} || D <- days(), P <- lists:seq(1, 2) ].
 
@@ -18,11 +18,13 @@ time([{D, P}|Rest]) ->
     io:format("Day ~b part ~b~n", [D, P]),
     io:format("~p~n", [time(D, P)]),
     time(Rest);
+time(Day) when is_integer(Day) -> time(Day, 1, []), time(Day, 2, []);
 time([]) -> ok.
 
 run(Day, Part) -> run(Day, Part, []).
 
 %% @doc Runs day 'Day' part 'Part' for 5 seconds, then prints the average runtime.
+
 time(Day, Part) -> time(Day, Part, []).
 
 run(Day, Part, Args) -> run(Day, Part, Args, fun apply/3).
@@ -33,9 +35,9 @@ time(Day, Part, Args, Start, Cur, Acc) when Cur - Start < 5000 ->
     NewAcc = [run(Day, Part, Args, fun timer:tc/3)|Acc],
     time(Day, Part, Args, Start, erlang:system_time(millisecond), NewAcc);
 time(_, _, _, _, _, Times) ->
-    Avg = lists:foldl(fun ({X, _}, Sum) -> X + Sum end, 0, Times) / length(Times) * 0.000001,
+    Avg = lists:foldl(fun ({X, _}, Sum) -> X + Sum end, 0, Times) / length(Times),
     % in theory you could put stdev here too. in practice, it doesn't work because of the short times. the min ends up as 0 and the max ends up as 0.016 for example.
-    io:format("Average runtime ~fs in ~b runs~n", [Avg, length(Times)]),
+    io:format("Average runtime ~.2fus in ~b runs~n", [Avg, length(Times)]),
     [{_,Result}|_] = Times,
     Result.
 
