@@ -2,14 +2,9 @@
 -include_lib("eunit/include/eunit.hrl").
 
 part1_test() ->
-    ?assertEqual(2, day1:part1(["12"])),
-    ?assertEqual(2, day1:part1(["14"])),
-    ?assertEqual(654, day1:part1(["1969"])),
-    ?assertEqual(33583, day1:part1(["100756"])),
+    ?assertEqual(7, day1:part1(["199", "200", "208", "210", "200", "207", "240", "269", "260", "263"])),
     ok.
 
 part2_test() ->
-    ?assertEqual(2, day1:part2(["14"])),
-    ?assertEqual(966, day1:part2(["1969"])),
-    ?assertEqual(50346, day1:part2(["100756"])),
+    ?assertEqual(5, day1:part2(["607", "618", "618", "617", "647", "716", "769", "792"])),
     ok.

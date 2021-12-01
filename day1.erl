@@ -2,24 +2,34 @@
 
 -export([part1/1, part2/1]).
 
-fuel_required(Mass) ->
-    trunc(Mass / 3) - 2.
 
 part1(Lines) ->
-    lists:sum([ fuel_required(list_to_integer(Fuel)) || Fuel <- Lines ]).
+    check_heights(["999"] ++ [ list_to_integer(Line) || Line <- Lines], 0).
 
-all_fuel_required(Fuel, Sum) ->
-    Req = fuel_required(Fuel),
-    if
-        Req =< 0 ->
-            Sum;
-        Req > 0 ->
-            all_fuel_required(Req, Sum + Req)
-    end.
 
-both(Line) ->
-    Req = fuel_required(list_to_integer(Line)),
-    Req + all_fuel_required(Req, 0).
+check_heights([_], Acc) ->
+    Acc;
+check_heights(Lines, Acc) ->
+    [H1, H2| Rest] = Lines,
+    check_heights(
+        [H2] ++ Rest, 
+        Acc + if H1 < H2 -> 1;
+            true -> 0
+        end
+    ).
+
+check_heights_window([_, _ ,_], Acc) ->
+    Acc;
+check_heights_window(Lines, Acc) ->
+    [H1, _, _, H4| _] = Lines,
+    [_|Tail] = Lines,
+    check_heights_window(
+        Tail, 
+        Acc + if H1 < H4 -> 1;
+            true -> 0
+        end
+    ).
 
 part2(Lines) ->
-    lists:sum([ both(Line) || Line <- Lines ]).
+    check_heights_window([list_to_integer(Line) || Line <- Lines], 0).
+
