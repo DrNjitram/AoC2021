@@ -2,36 +2,34 @@
 
 -export([part1/1, part2/1]).
 
-tokenizer(Lines) ->
-    [{A, list_to_integer(B)} || [A, B] <- [ string:tokens(Line, " ") || Line <- Lines ]].
 
 get_depth_height([], Depth, Distance) ->
     Depth * Distance;
-get_depth_height([{Direction, Value}|Rest], Depth, Distance) ->
+get_depth_height([[Direction, Value]|Rest], Depth, Distance) ->
     case Direction of
-        "forward" -> 
+        forward -> 
             get_depth_height(Rest, Depth, Distance + Value);
-        "down" ->
+        down ->
             get_depth_height(Rest, Depth + Value, Distance);
-        "up" ->
+        up ->
             get_depth_height(Rest, Depth - Value, Distance)
     end.
 
 get_aim([], Depth, Distance, _) ->
     Depth * Distance;
-get_aim([{Direction, Value}|Rest], Depth, Distance, Aim) ->
+get_aim([[Direction, Value]|Rest], Depth, Distance, Aim) ->
     case Direction of
-        "forward" -> 
+        forward -> 
             get_aim(Rest, Depth + (Aim * Value), Distance + Value, Aim);
-        "down" ->
+        down ->
             get_aim(Rest, Depth, Distance, Aim  + Value);
-        "up" ->
+        up ->
             get_aim(Rest, Depth, Distance, Aim  - Value)
     end.
 
 
 part1(Lines) ->
-    get_depth_height(tokenizer(Lines), 0, 0).
+    get_depth_height(util:parse(Lines, [atom, integer]), 0, 0).
 
 part2(Lines) ->
-    get_aim(tokenizer(Lines), 0, 0, 0).
+    get_aim(util:parse(Lines, [atom, integer]), 0, 0, 0).
