@@ -13,4 +13,4 @@ parse(Line, Types, Split) ->
     [parse(Pair) || Pair <- lists:zip(string:tokens(Line, Split), Types)].
 
 
-count(Sub, String) -> erlang:length( binary:split(binary:list_to_bin(String), binary:list_to_bin(Sub), [global]) ) - 1.
+count(Sub, String) -> erlang:length(string:split(String, Sub, all)) - 1.
