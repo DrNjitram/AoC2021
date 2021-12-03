@@ -2,55 +2,37 @@
 
 -export([part1/1, part2/1]).
 
-count(Sub, String) -> erlang:length( binary:split(binary:list_to_bin(String), binary:list_to_bin(Sub), [global]) ) - 1.
-
-convert(Value) ->
-    list_to_integer(Value, 2).
-
-get_counts1(Line) ->
-    get_counts(Line, "1", "0").
-get_counts0(Line) ->
-    get_counts(Line, "0", "1").
-
-get_counts(Line, R1, R2) ->
-    C1 = count("1", Line),
-    C0 = count("0", Line),
+get_counts(Line, R1) ->
+    C1 = util:count("1", Line),
+    C0 = length(Line) - C1,
     if C1 >= C0 -> R1;
-        true -> R2
+        true -> 
+            if R1 == "1" -> "0";
+            true -> "1"
+        end
     end.
+    
+get_positional(Inp) ->
+    [[lists:nth(I, L)  || L <- Inp] || I <- lists:seq(1,length(hd(Inp)))]. 
 
-get_positional(List) ->
-    get_positional(List, []).
-get_positional(List, Acc) ->
-    if hd(List) == [] ->
-        Acc;
-        true ->
-            Curr = lists:foldl(fun(B, A) -> A ++ [hd(B)] end, "", List),
-            Ts = lists:foldl(fun(B, A) -> A ++ [tl(B)] end, [], List),
-            get_positional(Ts, Acc ++ [Curr])
-    end.
-
-
-get_subset(L, Positionals, Pos, F) ->
-    Most = F(lists:nth(Pos, Positionals)), 
+get_subset(L, Pos, Target) ->
+    Most = get_counts([lists:nth(Pos, Line) || Line <- L], Target), 
     [X || X <- L, [lists:nth(Pos, X)] == Most].
 
-build_common_string([Loser], _ ,_) ->
-    Loser;
-build_common_string(L, Position, F) ->
-    Pos = get_positional(L),
-    SubL = get_subset(L, Pos, Position, F),
-    build_common_string(SubL, Position + 1, F).
+build_common_string([Result], _ ,_) ->
+    Result;
+build_common_string(L, Position, Target) ->
+    build_common_string(get_subset(L, Position, Target), Position + 1, Target).
 
 part1(Lines) ->
     Positionals = get_positional(Lines),
-	Gamma = convert(lists:flatten(lists:map(fun get_counts1/1, Positionals))),
+	Gamma = list_to_integer(lists:flatten([get_counts(Line, "1") || Line <- Positionals]), 2),
     Epsilon = trunc(math:pow(2, length(hd(Lines)))) - 1 - Gamma,
     Gamma * Epsilon.
 
 part2(Lines) ->
-    Most = build_common_string(Lines, 1, fun get_counts1/1),
-    Least = build_common_string(Lines, 1, fun get_counts0/1),
-    A = convert(lists:flatten(Most)),
-    B = convert(lists:flatten(Least)),
-    A * B.
+    O2 = build_common_string(Lines, 1, "1"),
+    CO2 = build_common_string(Lines, 1, "0"),
+    VO2 = list_to_integer(lists:flatten(O2), 2),
+    VCO2 = list_to_integer(lists:flatten(CO2), 2),
+    VO2 * VCO2.

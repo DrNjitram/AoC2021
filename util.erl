@@ -1,8 +1,6 @@
 -module(util).
 
--export([parse/2]).
-
-
+-export([parse/2, count/2]).
 
 parse({Value, Type})->
     F = list_to_atom("list_to_" ++ atom_to_list(Type)),
@@ -15,3 +13,4 @@ parse(Line, Types, Split) ->
     [parse(Pair) || Pair <- lists:zip(string:tokens(Line, Split), Types)].
 
 
+count(Sub, String) -> erlang:length( binary:split(binary:list_to_bin(String), binary:list_to_bin(Sub), [global]) ) - 1.
