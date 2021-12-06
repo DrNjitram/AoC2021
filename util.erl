@@ -1,6 +1,6 @@
 -module(util).
 
--export([parse/2, count/2]).
+-export([parse/2, count/2, transpose/1]).
 
 parse({Value, Type})->
     F = list_to_atom("list_to_" ++ atom_to_list(Type)),
@@ -14,3 +14,7 @@ parse(Line, Types, Split) ->
 
 
 count(Sub, String) -> erlang:length(string:split(String, Sub, all)) - 1.
+
+transpose([[]|_]) -> [];
+transpose(M) ->
+  [lists:map(fun hd/1, M) | transpose(lists:map(fun tl/1, M))].
