@@ -2,21 +2,17 @@
 
 -export([part1/1, part2/1]).
 
-age_fish(Fish) when Fish > 0 -> Fish - 1;
-age_fish(_) -> [6, 8].
+smart_step(Fishes, 0) ->
+    lists:sum(Fishes);
+smart_step([D0, D1, D2, D3, D4, D5, D6, D7, D8], Days) ->
+    smart_step([D1, D2, D3, D4, D5, D6, D7+ D0, D8, D0], Days - 1).
 
-% 2^((80 - 3)/7)
-
-step(Fishes, 0) ->
-    lists:flatten(Fishes);
-step(Fishes, Days) ->
-    step(lists:flatten([age_fish(Fish) || Fish <- Fishes]), Days - 1).
-
-smart_step(Fishes, Days) ->
-    lists:sum([ math:pow(2, (Days - Fish)/7) || Fish <- Fishes]).
+parse_fishes(Lines) ->
+    Line = [list_to_integer(Value) || Value <- string:tokens(Lines, ",")],
+    [util:count(I, Line) || I <- lists:seq(0, 8)].
 
 part1([Lines]) ->
-    length(step([list_to_integer(Value) || Value <- string:tokens(Lines, ",")], 80)).
+    smart_step( parse_fishes(Lines), 80).
 
 part2([Lines]) ->
-    length(step([list_to_integer(Value) || Value <- string:tokens(Lines, ",")], 256)).
+     smart_step( parse_fishes(Lines), 256).

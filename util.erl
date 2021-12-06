@@ -13,6 +13,7 @@ parse(Line, Types, Split) ->
     [parse(Pair) || Pair <- lists:zip(string:tokens(Line, Split), Types)].
 
 
+count(Sub, List) when is_integer(Sub) -> length([ X || X <- List, X == Sub]);
 count(Sub, String) -> erlang:length(string:split(String, Sub, all)) - 1.
 
 transpose([[]|_]) -> [];
