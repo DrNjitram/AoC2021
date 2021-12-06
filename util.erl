@@ -1,6 +1,6 @@
 -module(util).
 
--export([parse/2, count/2, transpose/1]).
+-export([parse/2, parse/3, count/2, transpose/1]).
 
 parse({Value, Type})->
     F = list_to_atom("list_to_" ++ atom_to_list(Type)),

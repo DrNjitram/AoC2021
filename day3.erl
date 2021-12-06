@@ -8,9 +8,6 @@ get_counts(Line, R1) ->
     if C1 >= C0 -> R1; true ->
         if R1 == "1" -> "0"; true -> "1" end
     end.
-    
-get_positional(Inp) ->
-    [[lists:nth(I, L)  || L <- Inp] || I <- lists:seq(1,length(hd(Inp)))]. 
 
 get_subset(L, Pos, Target) ->
     Most = get_counts([lists:nth(Pos, Line) || Line <- L], Target), 

@@ -10,13 +10,9 @@ check_win([Line|Rest]) ->
         true -> check_win(Rest)
     end.
 
-parse_move([No, Marked], Move) ->
-    if Marked == true -> [No, true];
-        true ->
-            if No == Move -> [No, true];
-                true -> [No, false]
-            end
-    end.
+parse_move([No, true], _) -> [No, true];
+parse_move([No, false], No) -> [No, true];
+parse_move([No, false], _) -> [No, false].
 
 parse(Moves, Board) ->
     parse_moves(Moves, Board, 1).
