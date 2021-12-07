@@ -1,9 +1,6 @@
 -module(day6_test).
 -include_lib("eunit/include/eunit.hrl").
 
-
-
-
 part1_test() ->
     ?assertEqual(5934, day6:part1(["3,4,3,1,2"])),
     ok.
