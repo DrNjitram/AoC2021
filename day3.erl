@@ -19,8 +19,8 @@ build_common_string(L, Position, Target) ->
     build_common_string(get_subset(L, Position, Target), Position + 1, Target).
 
 part1(Lines) ->
-    Positionals = util:transpose(Lines),
-	Gamma = list_to_integer(lists:flatten([get_counts(Line, "1") || Line <- Positionals]), 2),
+    Transposed = util:transpose(Lines),
+	Gamma = list_to_integer(lists:flatten([get_counts(Line, "1") || Line <- Transposed]), 2),
     Epsilon = trunc(math:pow(2, length(hd(Lines)))) - 1 - Gamma,
     Gamma * Epsilon.
 
