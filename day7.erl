@@ -17,7 +17,14 @@ get_fuels(Vals) ->
     Max = lists:max(Vals),
     Range =  Max - Min,
     All_costs = create_costs(Range),
-    [lists:sum([lists:nth(abs(V1 - V2) + 1, All_costs) || V2 <- Vals]) || V1 <- lists:seq(Min, Max)].
+    get_fuels1(lists:seq(Min, Max), 9999999999999999999999999, Vals, All_costs).
+get_fuels1([], Low, _, _) -> Low;
+get_fuels1([Curr|Rest], Low, L, All_costs) ->
+    NewFuel = lists:sum([lists:nth(abs(Curr - V2) + 1, All_costs) || V2 <- L]),
+    if NewFuel < Low -> get_fuels1(Rest, NewFuel, L, All_costs);
+        true -> get_fuels1(Rest, Low, L, All_costs)
+    end.
+
 
 part1([Lines]) ->
     Vals = [list_to_integer(X) || X <- string:tokens(Lines, ",")],
@@ -26,5 +33,4 @@ part1([Lines]) ->
 
 part2([Lines]) ->
     Vals = [list_to_integer(X) || X <- string:tokens(Lines, ",")],
-    Fuels = get_fuels(Vals),
-    hd(lists:sort(Fuels)).
+    get_fuels(Vals).
