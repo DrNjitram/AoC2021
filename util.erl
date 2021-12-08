@@ -14,6 +14,7 @@ parse(Line, Types, Split) ->
 
 
 count(Sub, List) when is_integer(Sub) -> length([ X || X <- List, X == Sub]);
+count(Sub, String) when is_atom(Sub)-> erlang:length(string:split(String, atom_to_list(Sub), all)) - 1;
 count(Sub, String) -> erlang:length(string:split(String, Sub, all)) - 1.
 
 transpose([[]|_]) -> [];

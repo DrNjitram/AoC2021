@@ -6,8 +6,8 @@ get_fuel1(Val, Vals) -> lists:sum([abs(Val - V) || V <- Vals]).
 
 get_fuel2(Val, Vals) -> lists:sum([get_fuel(Val, V) || V <- Vals]).
 
-get_fuel(A, B) when A > B -> N = A - B, round(N*(N+1)/2); 
-get_fuel(A, B) when A < B -> N = B - A, round(N*(N+1)/2); 
+get_fuel(A, B) when A > B -> N = A - B, trunc(N*(N+1)/2); 
+get_fuel(A, B) when A < B -> N = B - A, trunc(N*(N+1)/2); 
 get_fuel(A, A) -> 0.    
 
 part1([Lines]) ->
@@ -16,4 +16,5 @@ part1([Lines]) ->
 
 part2([Lines]) ->
     Vals = [list_to_integer(X) || X <- string:tokens(Lines, ",")],
-    get_fuel2(round(lists:sum(Vals)/(length(Vals) + 0.5)), Vals).
+    Avg = round(lists:sum(Vals)/(length(Vals))),
+    lists:min([get_fuel2(Avg, Vals), get_fuel2(Avg - 1, Vals), get_fuel2(Avg + 1, Vals)]).

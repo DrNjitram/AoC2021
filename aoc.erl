@@ -37,7 +37,7 @@ time(Day, Part, Args, Start, Cur, Acc) when Cur - Start < 5000 ->
 time(_, _, _, _, _, Times) ->
     Avg = lists:foldl(fun ({X, _}, Sum) -> X + Sum end, 0, Times) / length(Times),
     % in theory you could put stdev here too. in practice, it doesn't work because of the short times. the min ends up as 0 and the max ends up as 0.016 for example.
-    io:format("Average runtime ~.2fms in ~b runs~n", [Avg, length(Times)]),
+    io:format("Average runtime ~.2fus in ~b runs~n", [Avg, length(Times)]),
     [{_,Result}|_] = Times,
     Result.
 
