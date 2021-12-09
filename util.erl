@@ -2,7 +2,7 @@
 
 -export([parse/2, parse/3, count/2, transpose/1, count_list/2, to_hashmap/1]).
 
-parse({Value, Type})->
+parse({Value, Type}) ->
     F = list_to_atom("list_to_" ++ atom_to_list(Type)),
     erlang:F(Value).
 parse(Lines, Types) when is_list(hd(Lines))->
@@ -12,8 +12,13 @@ parse(Line, Types) ->
 parse(Line, Types, Split) -> 
     [parse(Pair) || Pair <- lists:zip(string:tokens(Line, Split), Types)].
 
-get_char(X, Y, Map) -> list_to_integer([lists:nth(X, lists:nth(Y, Map))]).
-to_hashmap(Lines) -> maps:from_list([ {{X, Y}, get_char(X, Y, Lines)} || X <- lists:seq(1, length(hd(Lines))), Y <- lists:seq(1, length(Lines))]).
+to_hashmap(Lines) ->
+    LineY = lists:zip(Lines, lists:seq(0, length(Lines)-1)),
+    CharXY = lists:flatmap(fun ({Line, Y}) ->
+        CharX = lists:zip(Line, lists:seq(0, length(Line)-1)),
+        [ {{X, Y}, C - $0} || {C, X} <- CharX ]
+    end, LineY),
+    maps:from_list(CharXY).
 
 count_list(Sub, List) -> length([ X || X <- List, X == Sub]).
 count(Sub, List) when is_integer(Sub) -> length([ X || X <- List, X == Sub]);
