@@ -1,6 +1,6 @@
 -module(util).
 
--export([parse/2, parse/3, count/2, transpose/1]).
+-export([parse/2, parse/3, count/2, transpose/1, count_list/2]).
 
 parse({Value, Type})->
     F = list_to_atom("list_to_" ++ atom_to_list(Type)),
@@ -13,6 +13,7 @@ parse(Line, Types, Split) ->
     [parse(Pair) || Pair <- lists:zip(string:tokens(Line, Split), Types)].
 
 
+count_list(Sub, List) -> length([ X || X <- List, X == Sub]).
 count(Sub, List) when is_integer(Sub) -> length([ X || X <- List, X == Sub]);
 count(Sub, String) when is_atom(Sub)-> erlang:length(string:split(String, atom_to_list(Sub), all)) - 1;
 count(Sub, String) -> erlang:length(string:split(String, Sub, all)) - 1.
