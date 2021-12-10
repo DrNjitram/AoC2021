@@ -91,6 +91,5 @@ get_output(Line) ->
     Result = apply_result(Wires, Output),
     to_number(Result).
 
-
 part2(Lines) ->
     lists:sum([get_output(Line) || Line <- Lines]).
