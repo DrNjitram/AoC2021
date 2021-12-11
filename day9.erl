@@ -2,8 +2,7 @@
 
 -export([part1/1, part2/1]).
 
-get_adjecents({X0, Y0}, Map) -> [maps:get({X0 + X, Y0 + Y}, Map, 9) || {X, Y} <- [{0, -1}, {0, 1}, {1, 0}, {-1, 0}]].
-check_low({X, Y}, Map) -> length([Height || Height <- get_adjecents({X, Y}, Map), Height =< maps:get({X, Y}, Map)]) == 0.
+check_low({X, Y}, Map) -> length([Height || Height <- util:get_adjecents({X, Y}, Map, 9, adj4), Height =< maps:get({X, Y}, Map)]) == 0.
 get_low_locations(Map) -> [{X, Y} || {X, Y} <- maps:keys(Map), check_low({X, Y}, Map)].
 
 get_basin_area({X, Y}, Map) -> get_basin_area([{X, Y}], Map, 1, [{X, Y}]).
