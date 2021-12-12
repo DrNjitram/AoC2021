@@ -1,6 +1,12 @@
 -module(util).
 
--export([parse/2, parse/3, count/2, transpose/1, count_list/2, to_hashmap/1, print_map/2, get_adjecents_positions/3, get_adjecents/4, get_adjecents/3]).
+-export([parse/2, parse/3, 
+    count/2, transpose/1, 
+count_list/2, to_hashmap/1, 
+print_map/2, get_adjecents_positions/3, 
+get_adjecents/4, get_adjecents/3, 
+last/1, parse_edges/1, print_set/1, print_set/2
+]).
 
 
 -define(ADJ8, [{0, -1}, {0, 1}, {1, 0}, {-1, 0}, {-1, -1}, {1, 1}, {1, -1}, {-1, 1}]).
@@ -24,6 +30,14 @@ to_hashmap(Lines) ->
     end, LineY),
     maps:from_list(CharXY).
 
+parse_edges(Edges) -> parse_edges(Edges, #{}).
+parse_edges([], Map) -> Map;
+parse_edges([Edge|Rest], Map) ->
+    [S, E] = string:tokens(Edge, "-"),
+    NewMap = Map#{ S => maps:get(S, Map, []) ++ [E]},
+    NewerMap = NewMap#{ E => maps:get(E, NewMap, []) ++ [S]},
+    parse_edges(Rest, NewerMap).
+
 count_list(Sub, List) -> length([ X || X <- List, X == Sub]).
 count(Sub, List) when is_integer(Sub) -> length([ X || X <- List, X == Sub]);
 count(Sub, String) when is_atom(Sub)-> erlang:length(string:split(String, atom_to_list(Sub), all)) - 1;
@@ -44,5 +58,12 @@ get_adjecents({X0, Y0}, Map, adj8) -> [maps:get({X0 + X, Y0 + Y}, Map) || {X, Y}
 get_adjecents({X0, Y0}, Map, adj4) -> [maps:get({X0 + X, Y0 + Y}, Map) || {X, Y} <- ?ADJ4, maps:find({X0 + X, Y0 + Y}, Map) /= error]. 
 
 
+print_set(_, Set) -> print_set(Set).
+print_set(Set) ->
+    io:format("~p~n", [sets:to_list(Set)]).  
+
 print_map(Map, {MinX, MinY, MaxX, MaxY}) ->
     [[ $0 + maps:get({X, Y}, Map, 0) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ].
+
+
+last(L) -> lists:last(L).

@@ -14,7 +14,7 @@ determine_valid([Char|Rest], Acc) ->
         true -> 
             Valid = Char == maps:get(lists:last(Acc), ?MATCH),
             if Valid -> 
-                determine_valid(Rest, lists:reverse(tl(lists:reverse(Acc))));
+                determine_valid(Rest, util:last(Acc));
                 true -> maps:get(Char, ?SCORES1)
             end
     end.
