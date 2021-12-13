@@ -2,10 +2,11 @@
 
 -export([parse/2, parse/3, 
     count/2, transpose/1, 
-count_list/2, to_hashmap/1, 
-print_map/2, get_adjecents_positions/3, 
-get_adjecents/4, get_adjecents/3, 
-last/1, parse_edges/1, print_set/1, print_set/2
+    count_list/2, to_hashmap/1, 
+    print_map/2, get_adjecents_positions/3, 
+    get_adjecents/4, get_adjecents/3, 
+    last/1, parse_edges/1, print_set/1, print_set/2,
+    print_binary_map/2, print_binary_map/1, print_map/1
 ]).
 
 
@@ -62,8 +63,21 @@ print_set(_, Set) -> print_set(Set).
 print_set(Set) ->
     io:format("~p~n", [sets:to_list(Set)]).  
 
+get_extend(Map) ->
+    Positions = maps:keys(Map),
+    Xs = lists:map(fun ({X, _}) -> X end, Positions),
+    Ys = lists:map(fun ({_, Y}) -> Y end, Positions),
+    {lists:min(Xs), lists:min(Ys), lists:max(Xs), lists:max(Ys)}.
+
+print_get_char(0) -> $.;
+print_get_char(1) -> $#.
+
+print_map(Map) -> print_map(Map, get_extend(Map)). 
+print_binary_map(Map) -> print_binary_map(Map, get_extend(Map)). 
+print_binary_map(Map, {MinX, MinY, MaxX, MaxY}) ->
+    io:format("~s~n",[[[ print_get_char( maps:get({X, Y}, Map, 0)) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
 print_map(Map, {MinX, MinY, MaxX, MaxY}) ->
-    [[ $0 + maps:get({X, Y}, Map, 0) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ].
+    io:format("~s~n",[[[ $0 + maps:get({X, Y}, Map, 0) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
 
 
 last(L) -> lists:last(L).

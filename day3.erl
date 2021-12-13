@@ -13,8 +13,7 @@ get_subset(L, Pos, Target) ->
     Most = get_counts([lists:nth(Pos, Line) || Line <- L], Target), 
     [X || X <- L, [lists:nth(Pos, X)] == Most].
 
-build_common_string([Result], _ ,_) ->
-    Result;
+build_common_string([Result], _ ,_) -> Result;
 build_common_string(L, Position, Target) ->
     build_common_string(get_subset(L, Position, Target), Position + 1, Target).
 

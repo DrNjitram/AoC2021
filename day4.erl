@@ -31,8 +31,7 @@ parse_moves([Curr|Moves], B, NoMoves) ->
 
 parse_boards(Boards, Moves) ->
     parse_boards(Boards, Moves, []).
-parse_boards([], _, Scores) ->
-    Scores;
+parse_boards([], _, Scores) -> Scores;
 parse_boards([L1, L2, L3, L4, L5| Rest], Moves, Scores) ->
     parse_boards(Rest, Moves, Scores ++ parse(Moves, [L1, L2, L3, L4, L5])).
 
