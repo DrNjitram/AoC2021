@@ -41,10 +41,20 @@ time(_, _, _, _, _, Times) ->
     [{_,Result}|_] = Times,
     Result.
 
+check_download(Day) ->
+    DayS = "day" ++ integer_to_list(Day),
+    case filelib:is_file(DayS ++ ".txt") of
+        true -> ok;
+        false -> 
+            io:format("Downloading file: " ++ DayS ++ ".txt"),
+            download_input(Day)
+    end.
+
 run(Day, Part, Args, F) ->
     DayS = "day" ++ integer_to_list(Day),
     Module = list_to_atom(DayS),
     Function = list_to_atom("part" ++ integer_to_list(Part)),
+    ok = check_download(Day),
     case file:read_file(DayS ++ ".txt") of
         {ok, Data} -> 
             BinaryLines = string:split(Data, ["\n"], all),
@@ -60,7 +70,8 @@ run(Day, Part, Args, F) ->
                     ok;
                 Output -> Output
             end;
-        {error,enoent} -> erlang:exit("Missing file: " ++ DayS ++ ".txt")
+        {error,enoent} -> 
+            erlang:exit("Failed to download file file: " ++ DayS ++ ".txt")
     end.
     
 
@@ -95,4 +106,5 @@ download_input(Day) ->
     {ok, {{_, 200, _}, _, Body}} = httpc:request(get, {ReqURL, [{"Cookie", "session=" ++ binary_to_list(SessionID)}]}, [], []),
     ok = file:write_file(OutputFilename, Body),
     ok = inets:stop(),
-    ok = ssl:stop().
+    ok = ssl:stop(),
+    ok.
