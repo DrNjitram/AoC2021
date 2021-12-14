@@ -6,7 +6,8 @@
     print_map/2, get_adjecents_positions/3, 
     get_adjecents/4, get_adjecents/3, 
     last/1, parse_edges/1, print_set/1, print_set/2,
-    print_binary_map/2, print_binary_map/1, print_map/1
+    print_binary_map/2, print_binary_map/1, print_map/1,
+    count_overlapping/2
 ]).
 
 
@@ -43,6 +44,14 @@ count_list(Sub, List) -> length([ X || X <- List, X == Sub]).
 count(Sub, List) when is_integer(Sub) -> length([ X || X <- List, X == Sub]);
 count(Sub, String) when is_atom(Sub)-> erlang:length(string:split(String, atom_to_list(Sub), all)) - 1;
 count(Sub, String) -> erlang:length(string:split(String, Sub, all)) - 1.
+count_overlapping(Sub, String) -> count_overlapping(Sub, String, 0).
+count_overlapping(_, [], Acc) -> Acc;
+count_overlapping(Sub, [First|Rest], Acc) -> 
+    case string:prefix([First|Rest], Sub) of
+        nomatch -> count_overlapping(Sub, Rest, Acc);
+        _ -> count_overlapping(Sub, Rest, Acc + 1)
+    end.
+
 
 transpose([[]|_]) -> [];
 transpose(M) ->

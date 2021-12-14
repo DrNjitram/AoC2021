@@ -27,3 +27,7 @@
 part1_test() ->
     ?assertEqual(1588, day14:part1(?INPUT)),
     ok.
+
+part2_test() ->
+    ?assertEqual(2188189693529, day14:part2(?INPUT)),
+    ok.
