@@ -4,7 +4,7 @@
 
 get_pairs(Template) -> get_pairs(Template, #{}).
 get_pairs([_], Map) -> Map;
-get_pairs([E1, E2|Rest], Map) -> get_pairs([E2] ++ Rest, Map#{ [E1,E2] => maps:get([E1,E2], Map, 0) + 1}).
+get_pairs([E1, E2|Rest], Map) -> get_pairs([E2|Rest], Map#{ [E1,E2] => maps:get([E1,E2], Map, 0) + 1}).
 
 apply_pair([E1, E2], [Value], OldPairs, NewPairs) ->  
     Quant = maps:get([E1, E2], OldPairs),
@@ -16,7 +16,7 @@ apply_rules(Rules, Pairs, Steps) ->
    
 count_things(Pairs) -> count_things(Pairs, #{}).
 count_things([], Acc) -> maps:map(fun(_, V) -> trunc(math:ceil(V/2)) end, Acc);
-count_things([{[E1, E1], Count}|Pairs], Acc) -> count_things(Pairs, Acc#{ [E1] => maps:get([E1], Acc, 0) + 2* Count});
+count_things([{[E1, E1], Count}|Pairs], Acc) -> count_things(Pairs, Acc#{ [E1] => maps:get([E1], Acc, 0) + 2 * Count});
 count_things([{[E1, E2], Count}|Pairs], Acc) -> count_things(Pairs, Acc#{ [E2] => maps:get([E2], Acc, 0) + Count, [E1] => maps:get([E1], Acc, 0) + Count}).
 
 solve(Template, Rules, Steps) ->
