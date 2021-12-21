@@ -7,7 +7,8 @@
     get_adjecents/4, get_adjecents/3, 
     last/1, parse_edges/1, print_set/1, print_set/2,
     print_binary_map/2, print_binary_map/1, print_map/1,
-    count_overlapping/2
+    count_overlapping/2, get_extend/1, insert/2,
+    print_map_path/2
 ]).
 
 
@@ -80,6 +81,11 @@ get_extend(Map) ->
 
 print_get_char(0) -> $.;
 print_get_char(1) -> $#.
+print_get_char(Pos, Path, Map) -> 
+    Present = lists:member(Pos, Path),
+    if Present -> $#;
+        not Present -> $0 + maps:get(Pos, Map)
+    end.
 
 print_map(Map) -> print_map(Map, get_extend(Map)). 
 print_binary_map(Map) -> print_binary_map(Map, get_extend(Map)). 
@@ -87,6 +93,16 @@ print_binary_map(Map, {MinX, MinY, MaxX, MaxY}) ->
     io:format("~s~n",[[[ print_get_char( maps:get({X, Y}, Map, 0)) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
 print_map(Map, {MinX, MinY, MaxX, MaxY}) ->
     io:format("~s~n",[[[ $0 + maps:get({X, Y}, Map, 0) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
-
+print_map_path(Map, Path) -> print_map_path(Map, get_extend(Map), Path). 
+print_map_path(Map, {MinX, MinY, MaxX, MaxY}, Path) ->
+    io:format("~s~n",[[[ print_get_char({X, Y}, Path, Map) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
 
 last(L) -> lists:last(L).
+
+insert(Elem, []) -> [Elem];
+insert(Elem, List) -> insert(Elem, List, []).
+insert({V, W}, [{V1, W1}], []) when W < W1 -> [{V, W}, {V1, W1}];
+insert({V, W}, [{V1, W1}], []) -> [{V1, W1}, {V, W}];
+insert(Elem, [Last], Acc) ->  Acc ++ [Last, Elem];
+insert({V, W}, [{V1, W1}, {V2, W2}], Acc) when W < W1 -> Acc ++ [{V, W}, {V1, W1} , {V2, W2}];
+insert({V, W}, [{V1, W1}|T], Acc) -> insert({V, W}, T, Acc ++ [{V1, W1}]).
