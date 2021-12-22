@@ -62,7 +62,6 @@ transpose(M) ->
 get_adjecents_positions({X0, Y0}, Map, adj8) -> [{X0 + X, Y0 + Y} || {X, Y} <- ?ADJ8, maps:find({X0 + X, Y0 + Y}, Map) /= error];
 get_adjecents_positions({X0, Y0}, Map, adj4) -> [{X0 + X, Y0 + Y} || {X, Y} <- ?ADJ4, maps:find({X0 + X, Y0 + Y}, Map) /= error].
 
-
 get_adjecents({X0, Y0}, Map, Default, adj8) -> [maps:get({X0 + X, Y0 + Y}, Map, Default) || {X, Y} <- ?ADJ8];
 get_adjecents({X0, Y0}, Map, Default, adj4) -> [maps:get({X0 + X, Y0 + Y}, Map, Default) || {X, Y} <- ?ADJ4].
 get_adjecents({X0, Y0}, Map, adj8) -> [maps:get({X0 + X, Y0 + Y}, Map) || {X, Y} <- ?ADJ8, maps:find({X0 + X, Y0 + Y}, Map) /= error];
@@ -92,17 +91,10 @@ print_binary_map(Map) -> print_binary_map(Map, get_extend(Map)).
 print_binary_map(Map, {MinX, MinY, MaxX, MaxY}) ->
     io:format("~s~n",[[[ print_get_char( maps:get({X, Y}, Map, 0)) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
 print_map(Map, {MinX, MinY, MaxX, MaxY}) ->
+    %[io:format("~p~n", [[[maps:get({X, Y}, Map, 0) || X <- lists:seq(MinX, MaxX) ] || Y <- lists:seq(MinY, MaxY) ]])].
     io:format("~s~n",[[[ $0 + maps:get({X, Y}, Map, 0) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
 print_map_path(Map, Path) -> print_map_path(Map, get_extend(Map), Path). 
 print_map_path(Map, {MinX, MinY, MaxX, MaxY}, Path) ->
     io:format("~s~n",[[[ print_get_char({X, Y}, Path, Map) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
 
 last(L) -> lists:last(L).
-
-insert(Elem, []) -> [Elem];
-insert(Elem, List) -> insert(Elem, List, []).
-insert({V, W}, [{V1, W1}], []) when W < W1 -> [{V, W}, {V1, W1}];
-insert({V, W}, [{V1, W1}], []) -> [{V1, W1}, {V, W}];
-insert(Elem, [Last], Acc) ->  Acc ++ [Last, Elem];
-insert({V, W}, [{V1, W1}, {V2, W2}], Acc) when W < W1 -> Acc ++ [{V, W}, {V1, W1} , {V2, W2}];
-insert({V, W}, [{V1, W1}|T], Acc) -> insert({V, W}, T, Acc ++ [{V1, W1}]).

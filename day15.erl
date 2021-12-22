@@ -20,11 +20,22 @@
 part1(Lines) ->
     Map = util:to_hashmap(Lines),
     {X0, Y0, X1, Y1} = util:get_extend(Map),
-    Path = pathfinding:shortest_path(Map, {X0, Y0}, {X1, Y1}),
-    io:format("~p~n", [[{P, maps:get(P, Map)} || P <- Path]]),
-    util:print_map_path(Map, Path),
-    lists:sum([ maps:get(P, Map) || P <- Path]) - 1.
+    pathfinding:shortest_path(Map, {X0, Y0}, {X1, Y1}).
+
+get_value(V, Layer) when V + Layer > 9 -> ((V + Layer) rem 10) + 1;
+get_value(V, Layer) -> V + Layer.
+
+add_entries({{X, Y}, V}, Map, Iters, Xm, Ym) ->
+    Duplicates = [{{X + (Xi * (Xm+1)), Y +  (Yi * (Ym+1))}, (Xi + Yi)} || Xi <- lists:seq(0, Iters - 1), Yi <- lists:seq(0, Iters - 1)],
+    lists:foldl(fun({Pos, Layer}, Accin) -> Accin#{Pos => get_value(V, Layer)} end, Map, Duplicates).
 
 
-part2(_) ->
-    ok.
+extend_map(Original, Iters, {_, _, Xm, Ym}) -> 
+    lists:foldl(fun(E, Accin) -> add_entries(E, Accin, Iters, Xm, Ym) end, Original, maps:to_list(Original)).
+
+
+part2(Lines) ->
+    Map = util:to_hashmap(Lines),
+    NewMap = extend_map(Map, 5, util:get_extend(Map)),
+    {X0, Y0, X1, Y1} = util:get_extend(NewMap),
+    pathfinding:shortest_path(NewMap, {X0, Y0}, {X1, Y1}).

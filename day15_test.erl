@@ -23,5 +23,5 @@ part1_test() ->
     ok.
 
 part2_test() ->
-    
+    ?assertEqual(315, day15:part2(?INPUT)),
     ok.

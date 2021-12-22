@@ -1,49 +1,46 @@
-function reconstruct_path(cameFrom, current)
-    total_path := {current}
-    while current in cameFrom.Keys:
-        current := cameFrom[current]
-        total_path.prepend(current)
-    return total_path
-
-// A* finds a path from start to goal.
-// h is the heuristic function. h(n) estimates the cost to reach goal from node n.
-function A_Star(start, goal, h)
-    // The set of discovered nodes that may need to be (re-)expanded.
-    // Initially, only the start node is known.
-    // This is usually implemented as a min-heap or priority queue rather than a hash-set.
-    openSet := {start}
-
-    // For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from start
-    // to n currently known.
-    cameFrom := an empty map
-
-    // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
-    gScore := map with default value of Infinity
-    gScore[start] := 0
-
-    // For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
-    // how short a path from start to finish can be if it goes through n.
-    fScore := map with default value of Infinity
-    fScore[start] := h(start)
-
-    while openSet is not empty
-        // This operation can occur in O(1) time if openSet is a min-heap or a priority queue
-        current := the node in openSet having the lowest fScore[] value
-        if current = goal
-            return reconstruct_path(cameFrom, current)
-
-        openSet.Remove(current)
-        for each neighbor of current
-            // d(current,neighbor) is the weight of the edge from current to neighbor
-            // tentative_gScore is the distance from start to the neighbor through current
-            tentative_gScore := gScore[current] + d(current, neighbor)
-            if tentative_gScore < gScore[neighbor]
-                // This path to neighbor is better than any previous one. Record it!
-                cameFrom[neighbor] := current
-                gScore[neighbor] := tentative_gScore
-                fScore[neighbor] := tentative_gScore + h(neighbor)
-                if neighbor not in openSet
-                    openSet.add(neighbor)
-
-    // Open set is empty but goal was never reached
-    return failure
+1163751742274862853385973964496:84:755:7195186
+13813736724924847835:35958946146:69:5725717:16
+213651132324762243435873354546984465657:955762
+36949315697:5:4267:816153781927264892:383759:3
+746341711857452822968563933:79674:4418:7851555
+131912813742:23924853134:35964245146:753562571
+135991242246::23533571134644682245755793356865
+312542163923653274:347643851458754962569865:73
+12931385223:424963341535:744526461855637572965
+1111954741222:65852333176963444287:74555398185
+13813736724924847835:35958946146:69:5725717:16
+213651132324762243435873354546984465657:955762
+36949315697:5:4267:816153781927264892:383759:3
+746341711857452822968563933:79674:4418:7851555
+131912813742:23924853134:35964245146:753562571
+135991242246::23533571134644682245755793356865
+312542163923653274:347643851458754962569865:73
+12931385223:424963341535:744526461855637572965
+1111954741222:65852333176963444287:74555398185
+13813736724924847835:35958946146:69:5725717:16
+213651132324762243435873354546984465657:955762
+36949315697:5:4267:816153781927264892:383759:3
+746341711857452822968563933:79674:4418:7851555
+131912813742:23924853134:35964245146:753562571
+135991242246::23533571134644682245755793356865
+312542163923653274:347643851458754962569865:73
+12931385223:424963341535:744526461855637572965
+1111954741222:65852333176963444287:74555398185
+13813736724924847835:35958946146:69:5725717:16
+213651132324762243435873354546984465657:955762
+36949315697:5:4267:816153781927264892:383759:3
+746341711857452822968563933:79674:4418:7851555
+131912813742:23924853134:35964245146:753562571
+135991242246::23533571134644682245755793356865
+312542163923653274:347643851458754962569865:73
+12931385223:424963341535:744526461855637572965
+1111954741222:65852333176963444287:74555398185
+13813736724924847835:35958946146:69:5725717:16
+213651132324762243435873354546984465657:955762
+36949315697:5:4267:816153781927264892:383759:3
+746341711857452822968563933:79674:4418:7851555
+131912813742:23924853134:35964245146:753562571
+135991242246::23533571134644682245755793356865
+312542163923653274:347643851458754962569865:73
+12931385223:424963341535:744526461855637572965
+2311944581422:556925331667:3644277814755388925

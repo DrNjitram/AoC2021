@@ -58,7 +58,7 @@ run(Day, Part, Args, F) ->
     case file:read_file(DayS ++ ".txt") of
         {ok, Data} -> 
             BinaryLines = string:split(Data, ["\n"], all),
-            Lines = [ binary_to_list(X) || X <- BinaryLines, size(X) =/= 0],
+            Lines = [ string:trim(binary_to_list(X)) || X <- BinaryLines, size(X) =/= 0],
 
             Main = "day" ++ integer_to_list(Day) ++ ".erl",
             {ok, MainModule} = compile:file(Main),
