@@ -93,7 +93,7 @@ test(Day) ->
             {ok, TestModule} = compile:file(Test),
             code:purge(TestModule),
             code:load_file(TestModule),
-            eunit:test(TestModule)
+            eunit:test({timeout, 10, TestModule})
     end.
 
 download_input(Day) ->
