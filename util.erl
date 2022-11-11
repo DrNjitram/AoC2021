@@ -1,14 +1,16 @@
 -module(util).
 
--export([parse/2, parse/3, 
+-export([
+    parse/2, parse/3, 
     count/2, transpose/1, 
     count_list/2, to_hashmap/1, 
     print_map/2, get_adjecents_positions/3, 
     get_adjecents/4, get_adjecents/3, 
     last/1, parse_edges/1, print_set/1, print_set/2,
     print_binary_map/2, print_binary_map/1, print_map/1,
-    count_overlapping/2, get_extend/1, insert/2,
-    print_map_path/2
+    count_overlapping/2, get_extend/1,
+    print_map_path/2,
+    parse_regex/3
 ]).
 
 
@@ -98,3 +100,8 @@ print_map_path(Map, {MinX, MinY, MaxX, MaxY}, Path) ->
     io:format("~s~n",[[[ print_get_char({X, Y}, Path, Map) || X <- lists:seq(MinX, MaxX) ] ++ "\n" || Y <- lists:seq(MinY, MaxY) ]]).
 
 last(L) -> lists:last(L).
+
+parse_regex(Line, Regex, Type) ->
+    {ok, MP} = re:compile(Regex),
+    {match, [[_|Captured]]} = re:run(Line, MP, [global]),
+    lists:map(fun ({S,L}) -> parse({string:slice(Line, S, L), Type}) end, Captured).
