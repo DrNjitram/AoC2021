@@ -17,7 +17,11 @@
 -define(ADJ8, [{0, -1}, {0, 1}, {1, 0}, {-1, 0}, {-1, -1}, {1, 1}, {1, -1}, {-1, 1}]).
 -define(ADJ4, [{0, -1}, {0, 1}, {1, 0}, {-1, 0}]).
 
-parse({Value, Type}) ->
+parse({Value, list}) -> Value;
+parse({Value, Type}) when is_list(Type) ->
+    F = list_to_atom("list_to_" ++ Type),
+    erlang:F(Value);
+parse({Value, Type}) when is_atom(Type)->
     F = list_to_atom("list_to_" ++ atom_to_list(Type)),
     erlang:F(Value).
 parse(Lines, Types) when is_list(hd(Lines))->
@@ -45,8 +49,8 @@ parse_edges([Edge|Rest], Map) ->
 
 count_list(Sub, List) -> length([ X || X <- List, X == Sub]).
 count(Sub, List) when is_integer(Sub) -> length([ X || X <- List, X == Sub]);
-count(Sub, String) when is_atom(Sub)-> erlang:length(string:split(String, atom_to_list(Sub), all)) - 1;
-count(Sub, String) -> erlang:length(string:split(String, Sub, all)) - 1.
+count(Sub, String) when is_atom(Sub)-> length(string:split(String, atom_to_list(Sub), all)) - 1;
+count(Sub, String) -> length(string:split(String, Sub, all)) - 1.
 count_overlapping(Sub, String) -> count_overlapping(Sub, String, 0).
 count_overlapping(_, [], Acc) -> Acc;
 count_overlapping(Sub, [First|Rest], Acc) -> 
